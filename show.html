@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/jquery.js"></script>
+    <title>一人之下</title>
+    <style type="text/css">
+        html,body {
+            height: 100%;
+        }
+        .mains {
+        	width: 400px;
+        	height: 50px;
+			text-align: center;
+		    background-color: #787;
+		    border-radius: 20px;
+		    width: 100%;
+		    height: 40%;
+		    margin: auto;
+		    position: absolute;
+		    top: 0;
+		    left: 10px;
+		    right: 10px;
+		    bottom: 0;
+        }
+        .main {
+        	height: 100%;
+        }
+        #pic {
+        	width: 100%;
+        	height: 43%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        #choose{
+            margin: 2px;
+            width: 24%;
+            height: 20px;
+        	border-radius: 3px;
+        	background-color: #9ED0F3 ;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 3px;
+            text-align: left;
+            float: left;
+            
+        }
+        #divmain {
+            width: 100%;
+            border-radius: 3px;
+            background-color: #9ED0f3 ;
+            box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.4);
+            margin-top: 3px;
+            text-align: left;
+            
+        }
+        #Pdiv {
+            margin-left: 2px;
+            margin-right: 2px;
+            width: 48%;
+            height: 35px;
+            border-radius: 2px;
+            background-color: #62697C  ;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 3px;
+            text-align: left;
+            float: left;
+            font-size: 14px;
+        }
+        #Phonediv {
+            width: 100%;
+            border-radius: 3px;
+            background-color: #9ED2f3 ;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 3px;
+            text-align: left;
+        }
+        .show_canvas {
+        	width: 100%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .head {
+            color: white;
+            height: 70%;
+            font-size: 40px;
+        }
+        .hum {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:0; 
+            right: 0;
+            top:13%;
+            bottom:0;
+        }
+        .mid {
+            color: white;
+            width: 100%;
+            height: 20%; 
+        }
+        .temp {
+        	float: left;
+        	font-size: 20px;
+        	width: 50%;
+        	height: 50%;
+        	margin:0 auto;
+        }
+        .hum1 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;
+        }
+        .hum2 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;   	
+        }
+        .end {
+            color: white;
+            height: 10%;  
+            text-align: right;
+        }
+        .time {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:35%; 
+            font-size: 10px;
+        }
+        .canvas {
+        	margin: 10px;
+        	width: 325px;
+        	height: 200px;
+      //  	background-color: #78f888;
+        }
+    </style>
+    <style>
+        button:hover {
+            cursor: pointer;
+        }
+        h4 {
+            margin: 30px 0 10px 0;
+        }
+        .wrap{
+            display: none;
+        }
+        @media screen and (max-width:640px) {
+            button {
+                width: 100%;
+                margin: 2% auto;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+	
+	<!-- <div class="container">
+        <h2>侧边滑出弹层插件--mSlider.js</h2>
+
+        <h4>方向：</h4>
+        <button id="btnLeft">左</button>
+        
+
+    </div>
+
+    <div class="wrap">
+        <div class="layer-left">
+            <div class="show" id='show'>
+	        </div>
+        </div>
+    </div> -->
+    <div id="comicTitle"></div>
+</div>
+<script type="text/javascript">
+function IsPC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
+}
+ 
+var flag = IsPC();
+
+if(flag == true){
+    PcRead();
+}
+else
+{
+   PhoneRead();
+}
+
+function PcRead(){
+    var url = 'https://www.tohomh123.com';
+        var div = document.getElementById('comicTitle');
+        var data = JSON.parse('<%- JSON.stringify(json) %>');
+        var len = data.length/4;
+        var showTitle = [];
+        var li = [];
+        for(var i = 0;i<data.length;i++){
+            if( (i%4) != 0){
+                for(var n = 0;n<len;n++){
+                    li[i%4] = data[i];
+               // showTitle[n] = li);
+                }          
+                  //  console.log(i%4)
+            }
+            else{
+                li[0] = data[i];
+                showTitle.push(li)
+                li = []
+            }
+            
+            
+        }
+
+        
+        for(var i=1;i<showTitle.length;i++){
+            var divmain = document.createElement('div');
+            divmain.id = "divmain";
+            for(var m=0;m<4;m++){
+                var divTitle = document.createElement('div');
+                var a = document.createElement('a');
+        //      console.log(data[i].title);
+                console.log(showTitle[i][m]);
+                divTitle.innerHTML = showTitle[i][m].title;
+                divTitle.id = "choose";
+    //          a.innerHTML = data[i].title;
+                a.href = url+showTitle[i][m].href;
+                divTitle.appendChild(a);
+                divmain.appendChild(divTitle);
+            }
+            
+            div.appendChild(divmain);  
+        }
+       
+   
+    var Cdiv = document.getElementById('comicTitle');
+    Cdiv.addEventListener("click", function(event){
+        var url = event.path[0].childNodes[1].href;
+        var list = url.split("/");
+        var last = list[list.length-1];
+        last = last.split('.')[0];
+        jump(last);
+    }, true);
+}
+
+function PhoneRead(){
+ var url = 'https://www.tohomh123.com';
+        var div = document.getElementById('comicTitle');
+        var data = JSON.parse('<%- JSON.stringify(json) %>');
+        var len = data.length/4;
+        var showTitle = [];
+        var li = [];
+        for(var i = 0;i<data.length;i++){
+            if( (i%4) != 0){
+                for(var n = 0;n<len;n++){
+                    li[i%4] = data[i];
+               // showTitle[n] = li);
+                }          
+                  //  console.log(i%4)
+            }
+            else{
+                li[0] = data[i];
+                showTitle.push(li)
+                li = []
+            }
+            
+            
+        }
+
+        
+        for(var i=1;i<showTitle.length;i++){
+            var divmain = document.createElement('div');
+            divmain.id = "Phonediv";
+            for(var m=0;m<4;m++){
+                var divTitle = document.createElement('div');
+                var a = document.createElement('a');
+        //      console.log(data[i].title);
+                console.log(showTitle[i][m]);
+                divTitle.innerHTML = showTitle[i][m].title;
+                divTitle.id = "Pdiv";
+    //          a.innerHTML = data[i].title;
+                a.href = url+showTitle[i][m].href;
+                divTitle.appendChild(a);
+                divmain.appendChild(divTitle);
+            }
+            
+            div.appendChild(divmain);  
+        }
+       
+   
+    var Cdiv = document.getElementById('comicTitle');
+    Cdiv.addEventListener("click", function(event){
+        var url = event.path[0].childNodes[1].href;
+        var list = url.split("/");
+        var last = list[list.length-1];
+        last = last.split('.')[0];
+        jump(last);
+    }, true);
+}
+
+
+function jump(str){
+    window.location.href='/read?'+'id='+str;
+}    
+</script>
+<script type="text/javascript">
+        
+function getInfo(str){
+	var url = {'url':str};
+	var xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('post', '/post_1');
+    xmlHttpRequest.setRequestHeader('content-type', 'application/json');
+    xmlHttpRequest.onload = function(resp) {
+        if (xmlHttpRequest.status == 200) {
+            console.log('提交成功！');
+        } else {
+            alert('Error:' + xmlHttpRequest.status);
+        }
+    };
+	xmlHttpRequest.onreadystatechange=function()
+	{
+	  if (xmlHttpRequest.readyState==4 && xmlHttpRequest.status==200)
+	    {
+	    window.location.href='/post_1';
+//	    start(xmlHttpRequest.responseText);
+//        CallBack(xmlHttpRequest.responseText);
+	    }
+	}
+    xmlHttpRequest.send(JSON.stringify(url));
+}
+
+function start(arr){
+	arr = JSON.parse(arr)
+	var title = arr[0].title;
+	var count = arr[0].count;
+	var pic = arr[0].pic;
+
+	title = title.split('(');
+    document.title = title[0];
+	var list = pic.split("/");
+	var last = list[list.length-1];
+	var url = list[0]+'//';
+	for(var i=2;i<list.length-1;i++){
+		url += list[i]+'/' 
+	}
+    console.log(url);
+	var l1 = last.split(".");
+	var l2 = l1[0].length;
+	var l3 = l1[0].split("0").length;
+	var dataUrl = [];
+	if(l2 == l3){
+		var lastUrl = '';
+		for(var i=1;i<count;i++){
+			if(i < 10){
+				lastUrl = '000'+i.toString();
+			}
+			else{
+				lastUrl = '00'+i.toString();
+			}
+			dataUrl.push(url+lastUrl+'.jpg');
+		}
+	}
+	else{
+		var lastUrl = '';
+		for(var i=0;i<count;i++){
+			if(i < 10){
+				lastUrl = '000'+i.toString();
+			}
+			else{
+				lastUrl = '00'+i.toString();
+			}
+			dataUrl.push(url+lastUrl+'.jpg');
+		}
+	}
+    show(dataUrl);
+}
+function show(arr){
+	var div = document.getElementById('show');
+	while(div.hasChildNodes()) //当div下还存在子节点时 循环继续
+    {
+        div.removeChild(div.firstChild);
+    }
+    for(var i=0;i<arr.length;i++){
+        var addImg = document.createElement('img');
+        console.log(arr[i])
+	    addImg.src = arr[i];
+	    addImg.id = 'pic';
+	    div.appendChild(addImg);
+    }
+}
+</script>
+<script type="text/javascript">
+/*	$(function(){
+	function showData(){
+		$.ajax({
+		    url:"http://www.lppting.top:8060/",
+		    type:'GET',
+		    timeout:30000,
+		    success:CallBack,
+            dataType:'json'
+	    });
+	    
+	}
+	function CallBack(tt){
+		    var d = eval(tt);
+		    temp.innerHTML = d[0].temp+"℃";
+		    hum.innerHTML = d[0].s_hum;
+		    hum_out.innerHTML = d[0].hum+"%";
+		    time.innerHTML = "更新时间: "+ d[0].time;
+            d.reverse()
+		    go(d);
+	    }
+	$(showData)
+}); */
+</script>
+<script type="text/javascript">
+	function go(arr){
+		var canvas,ctx;
+        var cHeight,cMargin,cSpace;
+        var originX,originY;
+        var totalBars,maxValue;
+        var totalNumber;
+		canvas = document.getElementById("canvas");
+		div = document.getElementById("show");
+
+		if(canvas && canvas.getContext){
+			ctx = canvas.getContext("2d");
+		}
+//		console.log(div.style.width,div.style.height);
+//        console.log(canvas.height,canvas.width);
+		var getPixelRatio = function (ctx) {
+        var backingStore = ctx.backingStorePixelRatio ||
+           ctx.webkitBackingStorePixelRatio ||
+           ctx.mozBackingStorePixelRatio ||
+           ctx.msBackingStorePixelRatio ||
+           ctx.oBackingStorePixelRatio ||
+           ctx.backingStorePixelRatio || 1;
+           return (window.devicePixelRatio || 1) / backingStore;
+       };
+       var ratio = getPixelRatio(ctx);
+//       canvas.style.width = canvas.width + 'px';
+//       canvas.style.height = canvas.height + 'px';
+
+       canvas.width = canvas.width * ratio;
+       canvas.height = canvas.height * ratio;
+//       console.log(canvas.height,canvas.width,canvas.style.width,canvas.style.height);
+//       console.log(ratio);
+		init();
+
+		function init(){
+			cMargin = 15;
+			cSpace = 20;
+			cHeight = canvas.height  - cSpace;
+			cWidth = canvas.width - cMargin;
+			originX = cMargin*3 + cSpace;
+			originY = cHeight-cMargin*2;
+			totalBars = arr.length;
+			maxValue = 0;
+			for(var i=0;i<arr.length;i++){
+				var barVal = parseInt(arr[i].s_hum);
+				if(barVal > maxValue){
+					maxValue = barVal;
+				}
+			}
+			maxValue += 50;
+			totalNumber = 6;
+
+			ctx.font = "20px Arial";
+			ctx.lineWidth = 1;
+//			console.log(canvas.height,canvas.width);
+//			console.log(originX,originY,originX,cMargin);
+			drawLine(originX,originY,originX,cMargin);
+			drawLine(originX,originY,cWidth-originX/2,originY);
+			drawMaker();
+			drawPoint();
+		}
+		
+		function drawLine(x,y,X,Y){
+			ctx.beginPath();
+			ctx.moveTo(x,y);
+			ctx.lineTo(X,Y);
+			ctx.stroke();
+			ctx.closePath();
+		}
+		function drawMaker(){
+			ctx.strokeStyle = "#8B008B";
+			var oneVal = parseInt(maxValue/totalNumber);
+
+			ctx.textAlign = "right";
+			for(var i=0;i<=totalNumber;i++){
+				var makerVal = i*oneVal;
+				console.log(oneVal);
+				var xMaker = originX - 5;
+				var yMaker = parseInt(cHeight*(1-makerVal/maxValue)/1.25)+cMargin*4;
+				console.log(makerVal,xMaker,yMaker,cSpace);
+				ctx.fillText(makerVal,xMaker,yMaker,cSpace*4);
+				if(i>0){
+					drawLine(originX,yMaker,cWidth-originX/2,yMaker);
+				}
+			}
+			ctx.textAlign = "center";
+/*			for(var i=0;i<totalBars;i++){
+				var makerVal = arr[i].hum;
+				var xMaker = parseInt(originX*2 + (cWidth-100)*(i/totalBars));
+				var yMaker = originY + 20;
+				console.log(totalBars,makerVal,xMaker,yMaker,cSpace);
+				ctx.fillText(makerVal,xMaker,yMaker,cSpace*4);
+				
+			}  */
+			console.log("ok");
+            ctx.save();
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText("湿度",-canvas.height/2,cSpace,cSpace*2);
+            ctx.restore();
+            ctx.fillText("时间",cWidth/2,originY+cSpace*2,cSpace*2);
+		}
+		function drawPoint(){
+			var data = [];
+			for(var i=0;i<totalBars;i++){
+				var oneVal = parseInt(maxValue/totalNumber);
+				var barVal = arr[i].s_hum;
+				var barH = parseInt(originY*(barVal/maxValue));
+				var y = parseInt(cHeight*(1-barVal/maxValue)/1.25)+cMargin*4
+				var x = parseInt(originX+20 + (cWidth-100)*(i/totalBars));
+				console.log((cWidth-100)*(i/totalBars));
+				data.push([x,y]);
+                drawArc(x,y);
+			}
+            Theline(data);
+		}
+		function drawArc(x,y){
+			ctx.fillStyle="#00FFFF";
+            ctx.beginPath();
+            ctx.arc(x,y,5,0,2*Math.PI);
+            ctx.closePath();
+            ctx.fill();
+		}
+		function Theline(obj){
+            for(var i=0;i<obj.length-1;i++){
+            	ctx.beginPath();
+            	ctx.moveTo(obj[i][0],obj[i][1]);
+            	ctx.lineTo(obj[i+1][0],obj[i+1][1])
+            	ctx.stroke();
+            }
+		}
+	}
+    var data = JSON.parse('<%- JSON.stringify(json)%>');
+//    go(data);
+/*	go(
+[["11:20",375],["11:20",575],["11:20",775],["11:20",175],["11:21",275]]
+		);  */
+</script>
+<!-- <script src="js/mSlider.js"></script>
+<script>
+    window.onload = function () {
+        //移动端使用touchend
+        var event = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'touchend' : 'click';
+
+        // 选择器
+        var Q = function (id) {
+        	        console.log(id);
+            return document.getElementById(id)
+        };
+        //方向控制
+        //左
+        var _left = new mSlider({
+            dom: ".layer-left"
+        });
+        Q('btnLeft').addEventListener(event, function () {
+            _left.open();
+        })
+        
+        
+        //连环调用
+        
+    }
+</script> -->
+</body>
+</html>

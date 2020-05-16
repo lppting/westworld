@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/form.css">
+  <script src="js/jquery.js"></script>
+  <meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>UP</title>
+</head>
+<!--   <form action="/upload" method="post" enctype="multipart/form-data"> -->
+   <form id="tf">
+    <div class="box">
+    	<DIV class="box-file">
+	      <input type="file" name="logo" id="file">
+	  </DIV>
+	  <div class="box-submit">
+	      <input type="button" value="UP" id="submit" onclick="submits();">
+	    </DIV>
+    </div>
+  </form>
+  <progress id="uploadprogress" min="0" max="1" value="0">0</progress>
+  <dialog>
+  	<div style="width:100%;height: 40px;border-bottom:0.1px solid #CCC"></div>
+  	<div class="box">
+
+    	<DIV class="box-file">
+	      <input type="file" name="logo" id="file">
+	  </DIV>
+	  <div class="box-submit">
+	      <input type="button" value="上传" id="submit" onclick="submits();">
+	    </DIV>
+    </div>
+
+</dialog>
+<button id="open_dialog">打开</button>
+<body>
+</body>
+<script>
+      var dialog = document.getElementsByTagName("dialog")[0],
+      openDialog = document.getElementById("open_dialog"),
+      closeDialog = document.getElementById("close_dialog");
+      openDialog.onclick = function(){
+          dialog.showModal();// 或者show(),这是有区别的
+      }
+      closeDialog.onclick = function(){
+          dialog.close();
+      }
+</script>
+<script type="text/javascript">
+function submits(){
+            var form = new FormData(document.getElementById("tf"));
+            var timer = setInterval(function(){ myTimer() }, 1000);
+//             var req = new XMLHttpRequest();
+//             req.open("post", "${pageContext.request.contextPath}/public/testupload", false);
+//             req.send(form);
+            $.ajax({
+                url:"./upload",
+                type:"post",
+                data:form,
+                processData:false,
+                contentType:false,
+                xhr:jqureAjaxXhrOnProgress(function(e){
+                	console.log(e);
+                	    if( e.total > 188){
+					        var percent=e.loaded / e.total;
+					        $('#uploadprogress').val(percent);            	    	
+                	    }
+
+				       // $('#uploadprogress').value(percent);
+				    }),
+                success:function(data){
+                    window.clearInterval(timer);
+                    console.log("over..");
+                },
+                error:function(e){
+                    alert("错误！！");
+                    window.clearInterval(timer);
+                }
+                
+            });   
+//             xhr.upload.onprogress = function (event) {
+// 　　if (event.lengthComputable) {
+// 	　　　　var complete = (event.loaded / event.total * 100 | 0);
+// 	　　　　var progress = document.getElementById('uploadprogress');
+// 	　　　　progress.value = progress.innerHTML = complete;
+// 	　　}
+// 	}; 
+            document.getElementById('file').value = "";    
+            //get();//此处为上传文件的进度条
+        }
+function myTimer() {
+    var d = new Date();
+    var t = d.toLocaleTimeString();
+}
+function progressHandlingFunction(e) {
+    if (e.lengthComputable) {
+        //e.loaded 上传大小
+        //e.total 文件大小
+        console.log(e);
+        var percent = e.loaded/e.total;
+    }
+} 
+var jqureAjaxXhrOnProgress = function(fun) {
+    jqureAjaxXhrOnProgress.onprogress = fun; //绑定监听
+    //使用闭包实现监听绑
+    return function() {
+        //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+        var xhr = $.ajaxSettings.xhr();
+        //判断监听函数是否为函数
+        if (typeof jqureAjaxXhrOnProgress.onprogress !== 'function')
+            return xhr;
+        //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+        if (jqureAjaxXhrOnProgress.onprogress && xhr.upload) {
+            xhr.upload.onprogress = jqureAjaxXhrOnProgress.onprogress;
+        }
+        console.log(xhr);
+        return xhr;
+    }
+}
+</script>
+<script type="text/javascript">
+// if(window.FormData) {　
+// 　　var formData = new FormData();
+
+// 　　// 建立一个upload表单项，值为上传的文件
+// 　　formData.append('upload', document.getElementById('file').files[0]);
+//     formData.append("username","zxj");
+//     formData.append("password",123456);
+// 　　var xhr = new XMLHttpRequest();
+// 　　//xhr.open('POST', $(this).attr('action'));
+//     xhr.open('POST', "upload");
+// 　　// 定义上传完成后的回调函数
+// 　　xhr.onload = function () {
+// 　　　　if (xhr.status === 200) {
+// 　　　　　　console.log('上传成功');
+// 　　　　} else {
+// 　　　　　　console.log('出错了');
+// 　　　　}
+// 　　};
+// 　　xhr.send(formData);
+// }
+</script>
+</html>

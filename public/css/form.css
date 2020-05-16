@@ -1,0 +1,105 @@
+.box {
+	width: 400px;
+	height: 300px;
+	margin-right: 5px;
+	margin-left: 5px;
+	margin-top: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+.box-input {
+	width: 100%;
+	height: 100%;
+	margin-right: 10px;
+	margin-left: 10px;
+	margin-top: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+.box-file {
+	margin-left: 40%;
+	margin-right: 40%;
+	margin-bottom: 20px;
+	margin-top: 80px;
+	width: 72px;
+	height: 72px;
+	background:url(up4.png);
+}
+#file {
+	height: 100%;
+	display: block;
+	//position: absolute;
+	background:url(button.png);
+	cursor: pointer;
+	left: 35px;
+	top: 7px;
+	opacity: 0; 
+	font-size: 12px;
+	background-color: #747456;
+}
+#submit {
+	width: 73px;
+	height: 25px;
+	margin-left: 40%;
+	margin-right: 40%;
+	margin-bottom: 20px;
+	background:url(button0.png);
+
+	font-size: 18px;
+	border: 0px;
+	background-color: #746456;
+}
+input.file{
+			display: block;
+			position: absolute;
+			cursor: pointer;
+			left: 35px;
+		    opacity: 0; //就是它，设置透明度的，将选择文件透明度变成0后，如图：
+		    top: 7px;
+				
+			}
+/*#submit{
+				margin-top: 40px;
+				margin-left: 0px;
+				background:url(button0.png)  ; //给个按钮上个背景
+				border: 0px; //将原本的边框的设置为0
+				border-radius: 12px; //设置四个角的弧度
+				width: 96px;
+				height: 25px;
+				cursor: pointer;//设置鼠标悬浮时，鼠标的样式
+			  //  font-size: 0;  //hahahhahahahahaha,这里是我脑洞大发，把字体设置为0，但是这样一来没有字体撑开，它会很小很小，
+			                            所以在上面制定了宽度和高度
+			}*/
+
+progress {
+    border-radius: 2px;
+    border-left: 1px #ccc solid;
+    border-right: 1px #ccc solid;
+    border-top: 1px #aaa solid;
+    background-color: #eee;
+}
+  
+progress::-webkit-progress-bar {
+    background-color: #d7d7d7;
+}
+  
+progress::-webkit-progress-value {
+    background-color: #aadd6a;
+}
+dialog:not([open]) { // 显示的时候
+    display: none;
+}
+dialog {
+    padding: 0;
+    border:0;
+    border-radius: 5px;
+    background: white;
+}
+dialog::backdrop {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.1);
+}

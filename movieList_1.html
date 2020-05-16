@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/DPlayer.min.css">
+    <script src="js/DPlayer.min.js"></script>
+    <script src="js/mSlider.js"></script>
+    <title>视频列表</title>
+    <style type="text/css">
+        html,body {
+            height: 100%;
+        }
+        .mains {
+        	width: 400px;
+        	height: 50px;
+			text-align: center;
+		    background-color: #787;
+		    border-radius: 20px;
+		    width: 100%;
+		    height: 40%;
+		    margin: auto;
+		    position: absolute;
+		    top: 0;
+		    left: 10px;
+		    right: 10px;
+		    bottom: 0;
+        }
+        .main {
+        	height: 100%;
+        }
+        #pic {
+        	width: 100%;
+        	height: 43%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .show {
+            width: 97%;
+            height: 100%;
+            background-color: #000000;
+            margin-left: 7px;
+        }
+        #choose{
+        	border-radius: 3px;
+        	background-color: #EFEFEF;
+            height: 10%;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 2px;
+            font-size: 16px;
+            text-align: left;
+        }
+        div {
+            white-space:normal;
+         word-break:break-all;
+         word-wrap:break-word; 
+        }
+        .show_canvas {
+        	width: 100%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .head {
+            color: white;
+            height: 70%;
+            font-size: 40px;
+        }
+        .hum {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:0; 
+            right: 0;
+            top:13%;
+            bottom:0;
+        }
+        .mid {
+            color: white;
+            width: 100%;
+            height: 20%; 
+        }
+        .temp {
+        	float: left;
+        	font-size: 20px;
+        	width: 50%;
+        	height: 50%;
+        	margin:0 auto;
+        }
+        .hum1 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;
+        }
+        .hum2 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;   	
+        }
+        .end {
+            color: white;
+            height: 10%;  
+            text-align: right;
+        }
+        .time {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:35%; 
+            font-size: 10px;
+        }
+        .canvas {
+        	margin: 10px;
+        	width: 325px;
+        	height: 200px;
+      //  	background-color: #78f888;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="dplayer"></div>
+<div class="main" id="main">
+    
+<div class="wrap">
+        <div class="layer-left">
+            <div class="show" id='show'>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+var url = 'https://www.tohomh123.com';
+	    var div = document.getElementById('show');
+        var data = JSON.parse('<%- JSON.stringify(json) %>');
+        for(var i=0;i<data.length;i++){
+        	var divTitle = document.createElement('div');
+        	var a = document.createElement('a');
+	//		console.log(data[i].title);
+         //   nameStr(data[i].name);   
+			divTitle.innerHTML = data[i].name;
+			divTitle.id = "choose";
+//			a.innerHTML = data[i].title;
+			
+            div.appendChild(divTitle);	
+        }
+   
+	var Cdiv = document.getElementById('show');
+	Cdiv.addEventListener("click", function(event){
+	//	var url = event.path[0].childNodes[1].href;
+        var movie = event.path[0].innerHTML;
+         console.log(movie);
+        data.forEach((v,e)=>{
+            if(v.name==movie){
+                var mpath = data[e].path;
+                console.log(mpath);
+                play(mpath);
+                return e;
+            }
+       //     console.log(v.name);
+            });
+	}, true);
+function nameStr(str){
+     var s = '';
+    
+    var len = str.split('.');
+    if( len.length >= 1){
+       
+        for(var i=0;i<len.length-1;i++){
+            s += len[i];
+        }
+        s += '.'+len[len.length-1];
+        
+    }
+    return s
+}
+function play(url){
+    const dp = new DPlayer({
+    container: document.getElementById('dplayer'),
+    screenshot: true,
+    hotkey: false,
+    video: {
+        url: '/media?path='+url,
+ //  url:'https://data.video.iqiyi.com/v.mp4?_=1559017173187&callback=Zepto1559017169502',
+        pic: 'demo.jpg',
+        thumbnails: 'thumbnails.jpg'
+    },
+    
+   
+});  
+}
+    function tab(str){
+        var info = {'info':str};
+    var xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('post', '/media');
+    xmlHttpRequest.setRequestHeader('content-type', 'application/json');
+    xmlHttpRequest.onload = function(resp) {
+        if (xmlHttpRequest.status == 200) {
+            console.log('提交成功！');
+        } else {
+            alert('Error:' + xmlHttpRequest.status);
+        }
+    };
+    xmlHttpRequest.onreadystatechange = function () {
+    　　var DONE = xmlHttpRequest.DONE || 4;
+    　　if (xmlHttpRequest.readyState === DONE) {
+    　　　　if (xmlHttpRequest.response) {
+    　　　　　　let bufferArray = xmlHttpRequest.response
+            console.log(bufferArray);
+    　　　　　　let uint8Array = new Uint8Array(bufferArray);    
+    　　　　　　for (var i = 0; i < bufferArray.Length; ++i) {
+    　　　　　　uint8Array[i] = bufferArray[i];
+    //      console.log(bufferArray[23]);
+    　　　　}
+    let data = "";
+    let len = uint8Array.byteLength;
+    for (let i = 0; i < len; i++) {
+    　　data += String.fromCharCode(uint8Array[i]);
+    }
+    var imageType = xmlHttpRequest.getResponseHeader("Content-Type");
+    var blob = new Blob([imageXhr.response], { type: imageType });
+    var imageUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+
+    var div = document.getElementById('show');
+    var addImg = document.createElement('img');
+    addImg.id = 'pic';
+    
+    addImg.src = "data:image/jpg;base64," + window.btoa(data);
+    div.appendChild(addImg);
+    console.log(uint8Array);
+    　　//　　callback(uint8Array)
+    　　　　}
+    　　}
+    }
+    xmlHttpRequest.send(JSON.stringify(info));
+    }    
+
+
+</script>
+<script type="text/javascript">
+window.onload = function () {
+    var event = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'touchend' : 'click';
+
+    var Q = function (id) {
+        return document.getElementById(id)
+    };
+    var _left = new mSlider({
+        dom: ".layer-left"
+    });
+    _left.open();
+    Q('main').addEventListener(event, function () {
+       _left.open();
+    })
+        
+}
+</script>
+
+</script>
+
+<script>
+    function resizeFont() {
+        //获取屏幕宽度
+        let clientWidth = document.documentElement.clientWidth || document.body.clientWidth;
+        //设计图参考宽度
+        let design = 750;
+        if (clientWidth > 750)
+            document.getElementsByTagName('html').item(0).style.fontSize = '100px';
+        else
+            document.getElementsByTagName('html').item(0).style.fontSize = clientWidth / design * 100 + 'px';
+    }
+    resizeFont();
+    window.onresize = function () {
+        resizeFont();
+    }
+</script>
+<script>
+var slider = {
+    //判断设备是否支持touch事件
+    touch:('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
+    slider:document.getElementById('slider'),
+
+    //事件
+    events:{
+        index:0,     //显示元素的索引
+        slider:this.slider,     //this为slider对象
+        icons:document.getElementById('show'),
+        icon:document.getElementById('choose'),
+        handleEvent:function(event){
+            var self = this;     //this指events对象
+            if(event.type == 'touchstart'){
+                self.start(event);
+            }else if(event.type == 'touchmove'){
+                self.move(event);
+            }else if(event.type == 'touchend'){
+                self.end(event);
+            }
+        },
+        //滑动开始
+        start:function(event){
+            var touch = event.targetTouches[0];     //touches数组对象获得屏幕上所有的touch，取第一个touch
+            startPos = {x:touch.pageX,y:touch.pageY,time:+new Date};    //取第一个touch的坐标值
+            isScrolling = 0;   //这个参数判断是垂直滚动还是水平滚动
+            this.slider.addEventListener('touchmove',this,false);
+            this.slider.addEventListener('touchend',this,false);
+        },
+        //移动
+        move:function(event){
+            //当屏幕有多个touch或者页面被缩放过，就不执行move操作
+            if(event.targetTouches.length > 1 || event.scale && event.scale !== 1) return;
+            var touch = event.targetTouches[0];
+            endPos = {x:touch.pageX - startPos.x,y:touch.pageY - startPos.y};
+            isScrolling = Math.abs(endPos.x) < Math.abs(endPos.y) ? 1:0;    //isScrolling为1时，表示纵向滑动，0为横向滑动
+            if(isScrolling === 0){
+                event.preventDefault();      //阻止触摸事件的默认行为，即阻止滚屏
+                this.slider.className = 'cnt';
+                this.slider.style.left = -this.index*600 + endPos.x + 'px';
+            }
+        },
+        //滑动释放
+        end:function(event){
+            var duration = +new Date - startPos.time;    //滑动的持续时间
+            if(isScrolling === 0){    //当为水平滚动时
+                this.icon[this.index].className = '';
+                if(Number(duration) > 10){     
+                    //判断是左移还是右移，当偏移量大于10时执行
+                    if(endPos.x > 10){
+                        if(this.index !== 0) this.index -= 1;
+                    }else if(endPos.x < -10){
+                        if(this.index !== this.icon.length-1) this.index += 1;
+                    }
+                }
+                this.icon[this.index].className = 'curr';
+                this.slider.className = 'cnt f-anim';
+                this.slider.style.left = -this.index*600 + 'px';
+            }
+            //解绑事件
+            this.slider.removeEventListener('touchmove',this,false);
+            this.slider.removeEventListener('touchend',this,false);
+        }
+    },
+    
+    //初始化
+    init:function(){
+        var self = this;     //this指slider对象
+        if(!!self.touch) self.slider.addEventListener('touchstart',self.events,false);    //addEventListener第二个参数可以传一个对象，会调用该对象的handleEvent属性
+    }
+};
+
+slider.init();
+</script>
+</body>
+</html>

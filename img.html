@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/DPlayer.min.css">
+    <script src="js/DPlayer.min.js"></script>
+    <script src="js/mSlider.js"></script>
+    <title>东部世界</title>
+    <style type="text/css">
+        html,body {
+            height: 100%;
+        }
+        .mains {
+            width: 400px;
+            height: 50px;
+            text-align: center;
+            background-color: #787;
+            border-radius: 20px;
+            width: 100%;
+            height: 40%;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 10px;
+            right: 10px;
+            bottom: 0;
+        }
+        .main {
+            height: 100%;
+        }
+        #pic {
+            width: 100%;
+            height: 43%;
+            border-radius: 6px;
+            background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .show {
+            width: 97%;
+            height: 100%;
+            background-color: #000000;
+            margin-left: 7px;
+        }
+        #choose{
+            border-radius: 3px;
+            background-color: #EFEFEF;
+            height: 10%;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 2px;
+            font-size: 16px;
+            text-align: left;
+        }
+        div {
+            white-space:normal;
+         word-break:break-all;
+         word-wrap:break-word; 
+        }
+        .show_canvas {
+            width: 100%;
+            border-radius: 6px;
+            background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .head {
+            color: white;
+            height: 70%;
+            font-size: 40px;
+        }
+        .hum {
+            height: 100%;
+            position: absolute;
+            margin: 5px;
+            left:0; 
+            right: 0;
+            top:13%;
+            bottom:0;
+        }
+        .mid {
+            color: white;
+            width: 100%;
+            height: 20%; 
+        }
+        .temp {
+            float: left;
+            font-size: 20px;
+            width: 50%;
+            height: 50%;
+            margin:0 auto;
+        }
+        .hum1 {
+            margin-top:8.6%;
+            width: 100%;
+            height: 100%;
+        }
+        .hum2 {
+            margin-top:8.6%;
+            width: 100%;
+            height: 100%;       
+        }
+        .end {
+            color: white;
+            height: 10%;  
+            text-align: right;
+        }
+        .time {
+            height: 100%;
+            position: absolute;
+            margin: 5px;
+            left:35%; 
+            font-size: 10px;
+        }
+        .canvas {
+            margin: 10px;
+            width: 325px;
+            height: 200px;
+      //    background-color: #78f888;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="dplayer"></div>
+<div class="main" id="main">
+     <div>欢迎来到East World</div>
+<div class="wrap">
+        <div class="layer-left">
+            <div class="show" id='show'>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var str = "龙岭迷窟.EP01.2020.HD1080P.X264.AAC.Mandarin.CHS.Mp4Ba.mp4";
+    var title = str.split(".")[0];
+    var Season = str.split(".")[1]
+    var parseStr = /[1-9]+/g;
+    var name = title.toUpperCase()+" 第" + EtoC(parseInt(Season.match(parseStr)[0])) + '季第'+Season.match(parseStr)[1]+'集';
+    console.log(name);
+function EtoC(num){
+    var n = '';
+    console.log(num);
+    switch (num){
+        case 1:
+            n = '一';
+            break;
+        case 2:
+            n = '二'
+            break;
+        case 3:
+        console.log('989');
+            n = '三';
+            break;
+        case 4:
+            n = '四';
+            break;
+        case 5:
+            n = '五';
+            break;
+        case 6:
+            n = '六';
+            break;
+        case 7:
+            n = '七';
+            break;
+        case 8:
+            n = '八';
+            break;
+        case 9:
+            n = '九';
+            break;   
+    }
+    console.log(n);
+    return n;
+}
+</script>
+<script type="text/javascript">
+    var data = JSON.parse('JSON.stringify(json)');
+    var div = document.getElementById('show');
+ for(var i=0;i<data.length;i++){
+    var name = data[i].name;
+     var addImg = document.createElement('img');
+    addImg.id = 'pic';
+    addImg.src = "./image/"+name;
+    div.appendChild(addImg);
+ }
+ //var div = document.getElementById('show');
+   
+</script>
+<script type="text/javascript">
+function play(url){
+    const dp = new DPlayer({
+    container: document.getElementById('dplayer'),
+    screenshot: true,
+    video: {
+        url: '/media?path='+url,
+        pic: 'demo.jpg',
+        thumbnails: 'thumbnails.jpg'
+    },
+});  
+}
+function tab(){
+        var info = {'info':'12123'};
+    var xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('get', '/image/1.png');
+    xmlHttpRequest.setRequestHeader('content-type', 'application/json');
+    xmlHttpRequest.onload = function(resp) {
+        if (xmlHttpRequest.status == 200) {
+            console.log('提交成功！');
+        } else {
+            alert('Error:' + xmlHttpRequest.status);
+        }
+    };
+    xmlHttpRequest.onreadystatechange = function () {
+    　　var DONE = xmlHttpRequest.DONE || 4;
+    　　if (xmlHttpRequest.readyState === DONE) {
+    　　　　if (xmlHttpRequest.response) {
+    　　　　　　let bufferArray = xmlHttpRequest.response
+            console.log(bufferArray);
+    　　　　　　let uint8Array = new Uint8Array(bufferArray);    
+    　　　　　　for (var i = 0; i < bufferArray.Length; ++i) {
+    　　　　　　uint8Array[i] = bufferArray[i];
+          console.log(bufferArray[23]);
+    　　　　}
+    let data = "";
+    let len = uint8Array.byteLength;
+    for (let i = 0; i < len; i++) {
+    　　data += String.fromCharCode(uint8Array[i]);
+    }
+    var imageType = xmlHttpRequest.getResponseHeader("Content-Type");
+    var blob = new Blob([xmlHttpRequest.response], { type: imageType });
+    var imageUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+
+    var div = document.getElementById('show');
+    var addImg = document.createElement('img');
+    addImg.id = 'pic';
+    
+    addImg.src = "./image/1.png";
+    div.appendChild(addImg);
+    console.log(imageUrl);
+    　　//　　callback(uint8Array)
+    　　　　}
+    　　}
+    }
+    xmlHttpRequest.send(JSON.stringify(info));
+    }    
+
+</script>
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+     var canvas = document.getElementById("canvas");
+     canvas.width = 2000;
+     canvas.height = 2000;
+     canvas.color = "#d4d4d4";
+     var ctx = canvas.getContext('2d');
+     bg();
+     head();
+     center();
+     bian();
+     other();
+     last();
+function last(){
+    var w = canvas.width/2;
+    var h = canvas.height/2;
+    ctx.beginPath();
+    ctx.moveTo(w+130,h+100);
+ //   ctx.quadraticCurveTo(w+340,h,w+100,h+400);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w+240,h+160);
+    ctx.quadraticCurveTo(w+170,h+150,w+240,h+400);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.rect(w+80,h+275,100,100);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w+190,h+100);
+    ctx.bezierCurveTo(w+230,h+200,w+160,h+290,w+100,h+290);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    
+    
+}
+function other(){
+    var w = canvas.width/2;
+    var h = canvas.height/2;
+    ctx.beginPath();
+    ctx.moveTo(w+470,h-150);
+    ctx.bezierCurveTo(w+270,h-70,w+180,h+200,w+320,h+450);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+}
+function bian(){
+    var w = canvas.width/2+430;
+    var h = canvas.height/2-500;
+    ctx.beginPath();
+    ctx.moveTo(w,h);
+    ctx.bezierCurveTo(w+160,h+40,w+50,h+300,w-60,h+390);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    w = canvas.width/2+350;
+    h = canvas.height/2-560;
+    ctx.beginPath();
+    ctx.moveTo(w,h);
+    ctx.bezierCurveTo(w+200,h,w+250,h+400,w-14,h+480);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    w = canvas.width/2+320;
+    h = canvas.height/2-575;
+    ctx.beginPath();
+    ctx.moveTo(w,h);
+    ctx.quadraticCurveTo(w+170,h+70,w+20,h+360);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    w = canvas.width/2+150;
+    h = canvas.height/2-290;
+    ctx.beginPath();
+    ctx.moveTo(w+130,h+50);
+    ctx.bezierCurveTo(w+200,h+150,w+200,h+370,w+20,h+300);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w-2,h);
+  //  ctx.quadraticCurveTo(w+150,h+100,w,h+300);
+    ctx.fillStyle = "#00ff45";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w+61,h+70);
+    ctx.quadraticCurveTo(w+210,h+50,w-60,h+600);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.rect(w-150,h+270,170,160);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+}
+function center(){
+    var w = canvas.width/2;
+    var h = canvas.height/2
+    ctx.beginPath();
+    ctx.moveTo(w-390,h);
+    ctx.bezierCurveTo(w-370,h-400,w+300,h-570,w+290,h);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w,h);           
+    ctx.arc(w+90,h-153,170,Math.PI,Math.PI*4,false);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w-390,h);
+    ctx.bezierCurveTo(w-380,h-140,w-40,h-230,w-170,h);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(w-290,h+270);
+    ctx.bezierCurveTo(w-450,h+780,w+350,h+780,w+260,h+300);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    w = w-200;
+    h = h;
+    ctx.beginPath();
+    ctx.moveTo(w+30,h);
+    ctx.quadraticCurveTo(w-230,h+680,w+200,h+650);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    w = w+400;
+    h = h;
+    ctx.beginPath();
+    ctx.moveTo(w-10,h+150);
+    ctx.quadraticCurveTo(w+100,h+630,w-200,h+650);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    w = canvas.width/2;
+    h = canvas.height/2;
+    ctx.beginPath();
+    ctx.moveTo(w-170,h);
+    ctx.bezierCurveTo(w,h-70,w+320,h+10,w-1,h+650);
+    ctx.fillStyle = "#454545";
+    ctx.fill();
+    
+}
+function head(){
+     ctx.stroke();
+     ctx.beginPath();
+     ctx.strokeStyle = "#ffffff";
+     ctx.arc(canvas.width/2,canvas.height/2-560,160,0,Math.PI*2,false);
+     ctx.fillStyle = "#ffffff";
+     ctx.fill();
+     ctx.stroke();
+     ctx.beginPath();
+     ctx.strokeStyle = "#000000";
+     ctx.arc(canvas.width/2,canvas.height/2-540,140,0,Math.PI*2,false);
+     ctx.fillStyle = "#454545";
+     ctx.fill();
+}
+function bg(){
+     ctx.strokeStyle = "#000000";
+     ctx.beginPath();
+//     ctx.fillText('每分钟投票人数',canvas.width/2-130,50);
+     ctx.arc(canvas.width/2,canvas.height/2,800,0,Math.PI*2,false);
+     ctx.fillStyle = "#454545";
+     ctx.closePath();
+     ctx.fill();
+     ctx.stroke();
+     ctx.beginPath();
+     ctx.strokeStyle = "#000000";
+     ctx.arc(canvas.width/2,canvas.height/2,730,0,Math.PI*2,false);
+     ctx.fillStyle = "#ffffff";
+     ctx.fill();
+     ctx.stroke();
+     ctx.beginPath();
+     ctx.strokeStyle = "#000000";
+     ctx.arc(canvas.width/2,canvas.height/2,660,0,Math.PI*2,false);
+     ctx.fillStyle = "#454545";
+     ctx.fill();
+     ctx.stroke();
+     ctx.beginPath();
+     ctx.strokeStyle = "#000000";
+     ctx.arc(canvas.width/2,canvas.height/2,400,0,Math.PI*2,false);
+     ctx.fillStyle = "#ffffff";
+     ctx.fill();
+}     

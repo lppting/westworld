@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>hehe</title>
+    <style type="text/css">
+        html,body {
+            height: 100%;
+        }
+        .mains {
+        	width: 400px;
+        	height: 50px;
+			text-align: center;
+		    background-color: #787;
+		    border-radius: 20px;
+		    width: 100%;
+		    height: 40%;
+		    margin: auto;
+		    position: absolute;
+		    top: 0;
+		    left: 10px;
+		    right: 10px;
+		    bottom: 0;
+        }
+        .main {
+        	height: 100%;
+        }
+        .pic {
+        	width: 100%;
+        	height: 43%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        #choose{
+        	width: 40%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 2px;
+            text-align: center;
+        }
+        .show_canvas {
+        	width: 100%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .head {
+            color: white;
+            height: 70%;
+            font-size: 40px;
+        }
+        .hum {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:0; 
+            right: 0;
+            top:13%;
+            bottom:0;
+        }
+        .mid {
+            color: white;
+            width: 100%;
+            height: 20%; 
+        }
+        .temp {
+        	float: left;
+        	font-size: 20px;
+        	width: 50%;
+        	height: 50%;
+        	margin:0 auto;
+        }
+        .hum1 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;
+        }
+        .hum2 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;   	
+        }
+        .end {
+            color: white;
+            height: 10%;  
+            text-align: right;
+        }
+        .time {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:35%; 
+            font-size: 10px;
+        }
+        .canvas {
+        	margin: 10px;
+        	width: 325px;
+        	height: 200px;
+      //  	background-color: #78f888;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+	<div class="show" id='show'>
+	</div>
+	
+</div>
+<script type="text/javascript">
+    var data = JSON.parse('<%- JSON.stringify(json) %>');
+    start(data);
+
+function start(arr){
+//	arr = JSON.parse(arr)
+	var title = arr[0].title;
+	var count = arr[0].count;
+	var pic = arr[0].pic;
+	title = title.split('(');
+    document.title = title[0];
+	var list = pic.split("/");
+	var last = list[list.length-1];
+	var url = list[0]+'//';
+	for(var i=2;i<list.length-1;i++){
+		url += list[i]+'/' 
+	}
+	var l1 = last.split(".");
+	var l2 = l1[0].length;
+	var l3 = l1[0].split("0").length;
+	var dataUrl = [];
+	if(l2>2){
+		if(l2 == l3){
+			var lastUrl = '';
+			for(var i=1;i<count;i++){
+				if(i<10){
+					lastUrl ='000'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}
+				else{
+					lastUrl ='00'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}	
+			}
+		}
+		else{
+			var lastUrl = '';
+			for(var i=0;i<count;i++){
+				if(i<10){
+					lastUrl ='000'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}
+				else{
+					lastUrl ='00'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}	  
+			}
+		}
+	}
+	else{
+		if(l2 == l3){
+			var lastUrl = '';
+			for(var i=1;i<count;i++){
+				if(i<10){
+					lastUrl ='0'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}
+				else{
+					lastUrl ='00'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}	
+			}
+		}
+		else{
+			var lastUrl = '';
+			for(var i=0;i<count;i++){
+				if(i<10){
+					lastUrl ='0'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}
+				else{
+					lastUrl ='00'+i.toString();
+					dataUrl.push(url+lastUrl+'.jpg');
+				}	
+			}
+		}
+	}
+    show(dataUrl);
+}
+function show(arr){
+	var div = document.getElementById('show');
+	while(div.hasChildNodes()) //当div下还存在子节点时 循环继续
+    {
+        div.removeChild(div.firstChild);
+    }
+    for (var i=0;i<arr.length;i++) {
+        var div = document.getElementById('show');
+        var addImg = document.createElement('img');
+        addImg.className = 'pic';
+        addImg.id = 'pic'+i;
+        div.appendChild(addImg);
+    }
+    
+    for(var i=0;i<arr.length;i++){
+        setTimeout(img(arr[i],i), {}, 1000);  
+    }
+}
+function img(dataUrl,num){
+    var url = {'url':dataUrl};
+    var xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('post', '/img');
+    xmlHttpRequest.responseType = 'arraybuffer';
+    xmlHttpRequest.setRequestHeader('content-type', 'application/json');
+    xmlHttpRequest.onload = function(resp) {
+        // if (xmlHttpRequest.status == 200) {
+        //     console.log('提交成功！');
+        // } else {
+        //     alert('Error:' + xmlHttpRequest.status);
+        // }
+    };
+    xmlHttpRequest.onreadystatechange = function () {
+        var DONE = xmlHttpRequest.DONE || 4;
+        if (xmlHttpRequest.readyState === DONE) {
+            if (xmlHttpRequest.response) {
+        　　　　　　let bufferArray = xmlHttpRequest.response
+        　　　　　　let uint8Array = new Uint8Array(bufferArray);    
+        　　　　　　for (var i = 0; i < bufferArray.Length; ++i) {
+            　　　　　　uint8Array[i] = bufferArray[i];
+            　　　}
+                let data = "";
+                let len = uint8Array.byteLength;
+                for (let i = 0; i < len; i++) {
+                　　data += String.fromCharCode(uint8Array[i]);
+                }
+                var img = document.getElementById('pic'+num);
+                img.src = "data:image/jpg;base64," + window.btoa(data);
+
+            }
+        }
+    }
+    xmlHttpRequest.send(JSON.stringify(url));
+}
+</script>
+<!-- <script type="text/javascript">
+
+    var imgDomain = 'https://mh1.xitangwenhua.com';
+    var did=7155;
+    var sid=426;
+    var iid = 2;//1;
+    var pcount = 19;
+    var finished = true;
+    var nextPlayDataUrl = '/yirenzhixia/427.html';
+    var bq = 1;
+    var pl = 'https://mh2.xitangwenhua.com/upload/yirenzhixia/2769162/0000.jpg';
+    var bqimg = '/pic/banquan.png';
+	$.ajax({
+                        type: 'GET',
+
+                        url: "https://mh2.xitangwenhua.com/upload/yirenzhixia/2769162/0001.jpg",
+            //            data: { did: did, sid: sid, iid: iid, tmp: Math.random() },
+            //            async: false,
+                        headers: {
+            "Accept" : "text/plain; charset=utf-8",
+            "Content-Type": "text/plain; charset=utf-8",
+            "Referer": "http://127.0.0.1:3000/read?id=402"
+
+        },
+            //            contentType: 'image/jpeg',
+            //            dataType: 'json',
+                        success: function (data) {
+                            if (data.Code.length < 1) {
+                                if (typeof bq != "undefined" && bq == 1 && iid == 2) {
+                                    $('#comicimg').attr("src", bqimg).removeAttr("style");
+                                }
+                                // 数据加载完
+                                // 锁定
+                               // me.lock();
+                                // 无数据
+                                //me.noData();
+                                $('.dropload-down').hide();
+                                $('#read_recommend').show();
+                            }
+                            else {
+                                if (typeof bq != "undefined" && bq == 1 && iid == 2) {
+                                    $('#comicimg').attr("src", pl).removeAttr("style");
+                                }
+                                setTimeout(function () {
+                                    $('.comicpage').append("<div><img src=\"" + data.Code + "" + "\"/></div>");
+                                    // 每次数据加载完，必须重置
+                                    me.resetload();
+                                    $(".showcurindex").text(iid - 1);
+                                }, !hasScrollbar() ? 800 : 1);
+                            }
+                            iid++;
+                        },
+                        error: function (xhr, type) {
+                            alert('Ajax error!');
+                            // 即使加载出错，也得重置
+                    //        me.resetload();
+                        }
+                    });
+
+</script> -->
+<!--
+<script type="text/javascript">
+        var url = 'https://www.tohomh123.com';
+ 	    var div = document.getElementById('show');
+
+
+
+        for(var i=0;i<10;i++){
+        	var divTitle = document.createElement('div');
+        	var a = document.createElement('a');
+			console.log(data[i].title);
+			divTitle.innerHTML = data[i].title;
+			divTitle.id = "choose";
+//			a.innerHTML = data[i].title;
+			a.href = url+data[i].href;
+			divTitle.appendChild(a);
+            div.appendChild(divTitle);	
+        }
+   
+	var Cdiv = document.getElementById('show');
+	Cdiv.addEventListener("click", function(event){getInfo(event.path[0].childNodes[1].href)}, true);
+    
+function getInfo(str){
+	var url = {'url':str};
+	var xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('post', '/post_1');
+    xmlHttpRequest.setRequestHeader('content-type', 'application/json');
+    xmlHttpRequest.onload = function(resp) {
+        if (xmlHttpRequest.status == 200) {
+            console.log('提交成功！');
+        } else {
+            alert('Error:' + xmlHttpRequest.status);
+        }
+    };
+	xmlHttpRequest.onreadystatechange=function()
+	{
+	  if (xmlHttpRequest.readyState==4 && xmlHttpRequest.status==200)
+	    {
+	    start(xmlHttpRequest.responseText);
+//        CallBack(xmlHttpRequest.responseText);
+	    }
+	}
+    xmlHttpRequest.send(JSON.stringify(url));
+}
+
+function start(arr){
+	arr = JSON.parse(arr)
+	var title = arr[0].title;
+	var count = arr[0].count;
+	var pic = arr[0].pic;
+
+	title = title.split('(');
+    document.title = title[0];
+	var list = pic.split("/");
+	var last = list[list.length-1];
+	var url = list[0]+'//';
+	for(var i=2;i<list.length-1;i++){
+		url += list[i]+'/' 
+		console.log(list[i]);
+	}
+
+	var l1 = last.split(".");
+	var l2 = l1[0].length;
+	var l3 = l1[0].split("0").length;
+	var dataUrl = [];
+	if(l2 == l3){
+		var lastUrl = '';
+		for(var i=1;i<count;i++){
+			if(i < 10){
+				lastUrl = '000'+i.toString();
+			}
+			else{
+				lastUrl = '00'+i.toString();
+			}
+			dataUrl.push(url+lastUrl+'.jpg');
+		}
+	}
+	else{
+		var lastUrl = '';
+		for(var i=0;i<count;i++){
+			if(i < 10){
+				lastUrl = '000'+i.toString();
+			}
+			else{
+				lastUrl = '00'+i.toString();
+			}
+			dataUrl.push(url+lastUrl+'.jpg');
+		}
+	}
+    show(dataUrl);
+}
+function show(arr){
+	var div = document.getElementById('show');
+	while(div.hasChildNodes()) //当div下还存在子节点时 循环继续
+    {
+        div.removeChild(div.firstChild);
+    }
+    for(var i=0;i<arr.length;i++){
+        var addImg = document.createElement('img');
+	    addImg.src = arr[i];
+	    addImg.id = 'pic';
+	    div.appendChild(addImg);
+    }
+}
+</script>
+-->
+<script type="text/javascript">
+/*	$(function(){
+	function showData(){
+		$.ajax({
+		    url:"http://www.lppting.top:8060/",
+		    type:'GET',
+		    timeout:30000,
+		    success:CallBack,
+            dataType:'json'
+	    });
+	    
+	}
+	function CallBack(tt){
+		    var d = eval(tt);
+		    temp.innerHTML = d[0].temp+"℃";
+		    hum.innerHTML = d[0].s_hum;
+		    hum_out.innerHTML = d[0].hum+"%";
+		    time.innerHTML = "更新时间: "+ d[0].time;
+            d.reverse()
+		    go(d);
+	    }
+	$(showData)
+}); */
+</script>
+
+</body>
+</html>

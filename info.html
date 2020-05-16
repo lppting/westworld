@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>一人之下</title>
+    <style type="text/css">
+        html,body {
+            height: 100%;
+        }
+        .mains {
+        	width: 400px;
+        	height: 50px;
+			text-align: center;
+		    background-color: #787;
+		    border-radius: 20px;
+		    width: 100%;
+		    height: 40%;
+		    margin: auto;
+		    position: absolute;
+		    top: 0;
+		    left: 10px;
+		    right: 10px;
+		    bottom: 0;
+        }
+        .main {
+        	height: 100%;
+        }
+        #pic {
+        	width: 100%;
+        	height: 43%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        #choose{
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 4px;
+            text-align: center;
+        }
+        .show_canvas {
+        	width: 100%;
+        	border-radius: 6px;
+        	background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .head {
+            color: white;
+            height: 70%;
+            font-size: 40px;
+        }
+        .hum {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:0; 
+            right: 0;
+            top:13%;
+            bottom:0;
+        }
+        .mid {
+            color: white;
+            width: 100%;
+            height: 20%; 
+        }
+        .temp {
+        	float: left;
+        	font-size: 20px;
+        	width: 50%;
+        	height: 50%;
+        	margin:0 auto;
+        }
+        .hum1 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;
+        }
+        .hum2 {
+        	margin-top:8.6%;
+        	width: 100%;
+        	height: 100%;   	
+        }
+        .end {
+            color: white;
+            height: 10%;  
+            text-align: right;
+        }
+        .time {
+        	height: 100%;
+        	position: absolute;
+        	margin: 5px;
+            left:35%; 
+            font-size: 10px;
+        }
+        .canvas {
+        	margin: 10px;
+        	width: 325px;
+        	height: 200px;
+      //  	background-color: #78f888;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+	<div class="show" id='show'>
+	</div>
+	
+</div>
+<script type="text/javascript">
+	    var div = document.getElementById('show');
+        var arr = JSON.parse('<%- JSON.stringify(json) %>');
+        arr.reverse();
+        for(var i=0;i<arr.length;i++){
+        	var view = document.createElement('div');
+        	view.id = 'pic';
+        	view.innerHTML = arr[i].info;
+        	div.appendChild(view); 
+        }
+</script>
+</body>
+</html>

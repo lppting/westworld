@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/jquery.js"></script>
+    <link rel="stylesheet" href="js/DPlayer.min.css">
+    <script src="js/DPlayer.min.js"></script>
+    <script src="js/mSlider.js"></script>
+    <script src="/base64.js"></script>
+    <title>视频列表</title>
+    <style type="text/css">
+        html,body {
+            height: 100%;
+        }
+        .mains {
+            width: 400px;
+            height: 50px;
+            text-align: center;
+            background-color: #787;
+            border-radius: 20px;
+            width: 100%;
+            height: 40%;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 10px;
+            right: 10px;
+            bottom: 0;
+        }
+        .main {
+            height: 100%;
+        }
+        #pic {
+            width: 100%;
+            height: 43%;
+            border-radius: 6px;
+            background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .show {
+            width: 97%;
+            height: 100%;
+            background-color: #000000;
+            margin-left: 7px;
+        }
+        #choose{
+            border-radius: 3px;
+            background-color: #EFEFEF;
+            height: 10%;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 2px;
+            font-size: 16px;
+            text-align: left;
+        }
+        div {
+            white-space:normal;
+         word-break:break-all;
+         word-wrap:break-word; 
+        }
+        .show_canvas {
+            width: 100%;
+            border-radius: 6px;
+            background-color: #787;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
+            text-align: center;
+        }
+        .head {
+            color: white;
+            height: 70%;
+            font-size: 40px;
+        }
+        .hum {
+            height: 100%;
+            position: absolute;
+            margin: 5px;
+            left:0; 
+            right: 0;
+            top:13%;
+            bottom:0;
+        }
+        .mid {
+            color: white;
+            width: 100%;
+            height: 20%; 
+        }
+        .temp {
+            float: left;
+            font-size: 20px;
+            width: 50%;
+            height: 50%;
+            margin:0 auto;
+        }
+        .hum1 {
+            margin-top:8.6%;
+            width: 100%;
+            height: 100%;
+        }
+        .hum2 {
+            margin-top:8.6%;
+            width: 100%;
+            height: 100%;       
+        }
+        .end {
+            color: white;
+            height: 10%;  
+            text-align: right;
+        }
+        .time {
+            height: 100%;
+            position: absolute;
+            margin: 5px;
+            left:35%; 
+            font-size: 10px;
+        }
+        .canvas {
+            margin: 10px;
+            width: 325px;
+            height: 200px;
+      //    background-color: #78f888;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="dplayer"></div>
+<div class="main" id="main">
+    
+<div class="wrap">
+        <div class="layer-left">
+            <div class="show" id='show'>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+function Base64() {
+ 
+    // private property
+    _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+ 
+    // public method for encoding
+    this.encode = function (input) {
+        var output = "";
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+        var i = 0;
+        input = _utf8_encode(input);
+        while (i < input.length) {
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+            enc1 = chr1 >> 2;
+            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+            enc4 = chr3 & 63;
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+                enc4 = 64;
+            }
+            output = output +
+            _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+            _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+        }
+        return output;
+    }
+ 
+    // public method for decoding
+    this.decode = function (input) {
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+        while (i < input.length) {
+            enc1 = _keyStr.indexOf(input.charAt(i++));
+            enc2 = _keyStr.indexOf(input.charAt(i++));
+            enc3 = _keyStr.indexOf(input.charAt(i++));
+            enc4 = _keyStr.indexOf(input.charAt(i++));
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+            chr3 = ((enc3 & 3) << 6) | enc4;
+            output = output + String.fromCharCode(chr1);
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+        output = _utf8_decode(output);
+        return output;
+    }
+ 
+    // private method for UTF-8 encoding
+    _utf8_encode = function (string) {
+        string = string.replace(/\r\n/g,"\n");
+        var utftext = "";
+        for (var n = 0; n < string.length; n++) {
+            var c = string.charCodeAt(n);
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            } else if((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            } else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+ 
+        }
+        return utftext;
+    }
+ 
+    // private method for UTF-8 decoding
+    _utf8_decode = function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+        while ( i < utftext.length ) {
+            c = utftext.charCodeAt(i);
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            } else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            } else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+        return string;
+    }
+}
+</script>
+<script type="text/javascript">
+var url = 'https://www.tohomh123.com';
+        var div = document.getElementById('show');
+        var data = JSON.parse('<%- JSON.stringify(json) %>');
+        for(var i=0;i<data.length;i++){
+            var divTitle = document.createElement('div');
+            var a = document.createElement('a');
+            console.log(data[i].name);
+            var name = ShortName(data[i].name);
+            divTitle.innerHTML = name;
+            divTitle.innerText = data[i].name
+            divTitle.id = "choose";
+//          a.innerHTML = data[i].title;
+            
+            div.appendChild(divTitle);  
+        }
+   
+    var Cdiv = document.getElementById('show');
+    Cdiv.addEventListener("click", function(event){
+    //  var url = event.path[0].childNodes[1].href;
+      document.getElementById("show").style.display="none";
+      document.getElementById("show").style.visibility="visible";
+        var movie = event.path[0].innerText;
+        data.forEach((v,e)=>{
+            if(v.name==movie){
+                var mpath = data[e].path;
+                
+                play(mpath);
+                return e;
+            }
+       //     console.log(v.name);
+            });
+    }, true);
+
+function ShortName(titles){
+    var str = titles;
+    var dicts = str.split('.');
+    var len = dicts.length;
+    var name = ''
+    if( len >= 1){
+        name = dicts[0];
+    }
+    else{
+        name =  dicts[0];
+    }
+    return name;
+}
+
+function play(url){
+    var b = new Base64();
+    var sr = b.decode(url);
+    console.log(sr);
+   // var url = sr.substring(sr.indexOf('\\')+2);
+    var url = sr.replace('D:\\Video\\','');
+    if(url.indexOf('\\') > 0){
+        url = url.replace('\\','|')
+    };
+    const dp = new DPlayer({
+    container: document.getElementById('dplayer'),
+    screenshot: true,
+    video: {
+  //      url: '/media?path='+url,
+       url: '/image/'+url,
+        pic: 'demo.jpg',
+        thumbnails: 'thumbnails.jpg'
+    },
+});  
+}
+
+function tab(str){
+        var info = {'info':str};
+    var xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('post', '/media');
+    xmlHttpRequest.setRequestHeader('content-type', 'application/json');
+    xmlHttpRequest.onload = function(resp) {
+        if (xmlHttpRequest.status == 200) {
+            console.log('提交成功！');
+        } else {
+            alert('Error:' + xmlHttpRequest.status);
+        }
+    };
+    xmlHttpRequest.onreadystatechange = function () {
+    　　var DONE = xmlHttpRequest.DONE || 4;
+    　　if (xmlHttpRequest.readyState === DONE) {
+    　　　　if (xmlHttpRequest.response) {
+    　　　　　　let bufferArray = xmlHttpRequest.response
+            console.log(bufferArray);
+    　　　　　　let uint8Array = new Uint8Array(bufferArray);    
+    　　　　　　for (var i = 0; i < bufferArray.Length; ++i) {
+    　　　　　　uint8Array[i] = bufferArray[i];
+    //      console.log(bufferArray[23]);
+    　　　　}
+    let data = "";
+    let len = uint8Array.byteLength;
+    for (let i = 0; i < len; i++) {
+    　　data += String.fromCharCode(uint8Array[i]);
+    }
+    var imageType = xmlHttpRequest.getResponseHeader("Content-Type");
+    var blob = new Blob([xmlHttpRequest.response], { type: imageType });
+    var imageUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+
+    var div = document.getElementById('show');
+    var addImg = document.createElement('img');
+    addImg.id = 'pic';
+    
+    addImg.src = "data:image/jpg;base64," + window.btoa(data);
+    div.appendChild(addImg);
+    console.log(uint8Array);
+    　　//　　callback(uint8Array)
+    　　　　}
+    　　}
+    }
+    xmlHttpRequest.send(JSON.stringify(info));
+    }    
+
+
+</script>
+<!-- <script type="text/javascript">
+window.onload = function () {
+    var event = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? 'touchend' : 'click';
+
+    var Q = function (id) {
+        return document.getElementById(id)
+    };
+    var _left = new mSlider({
+        dom: ".layer-left"
+    });
+    _left.open();
+    Q('main').addEventListener(event, function () {
+       _left.open();
+    })
+        
+}
+</script> -->
+
+</script>
+</body>
+</html>
