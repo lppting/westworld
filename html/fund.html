@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes">
+    <link rel="stylesheet" href="js/DPlayer.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="/js/base64.js"></script>
+    <script src="/js/md5.js"></script>
+    <script src="/js/DPlayer.min.js"></script>
+    <script src="js/jquery.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      #m { border: 0; padding: 10px; width: 80%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px;margin-right: 10px;}
+
+      #file { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px;margin-right: 10px; float:right;}
+      img {height: 200px;}
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="tf" action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+      <input type="file" name="logo" id="file" onchange="submits();"/>
+    </form>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script>
+ // var socket = io.connect('http://localhost');
+ // socket.on('news', function (data) {
+  //  console.log(data);
+ //   socket.emit('my other event', { my: 'data' });
+ // });
+</script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+function dataCheck(Fda){
+  let InData = {};
+  let num = [];
+  let OutData =[];
+  for(var i=0;i<Fda.length;i++){
+      if(InData.hasOwnProperty((Fda[i].fundcode)) == false){
+        let New = [];
+        New.push(Fda[i])
+        // console.log(New)
+        InData[Fda[i].fundcode] = New;
+        num.push(Fda[i].fundcode)
+      }
+      else{
+        var s = Fda[i].fundcode;
+        var li = InData[s]
+        li.push(Fda[i]);
+        InData[Fda[i].fundcode] = li;
+      }
+
+      
+  }
+
+      for(var n=0;n<num.length;n++){
+          var list = InData[num[n]];
+          if( list.length > 1){
+              list.sort(function(a,b){
+                  return b - a;
+              })
+              OutData[n] = list[0]; 
+          }
+          else{
+              OutData[n] = list[0]; 
+          }
+      }
+      return OutData;
+}
+
+function tupian(){
+  
+  var f = document.getElementById("file").files[0];
+  var h1 = document.createElement('img');
+//  h1.src = obj[i].num;
+  h1.className = 'simg';
+  h1.id = 'simg';
+  h1.src = f;
+  h1.innerHTML = 'koko';
+ // console.log(f);
+  document.getElementById('m').value=this.files[0].name;
+}
+var f = document.getElementById("file").files[0];
+
+  $(function () {
+    var socket = io();
+    $('form').submit(function(){
+   //   console.log($('#m').val());
+      socket.emit('chat message', {"type":"text","value":$('#m').val()});
+      $('#m').val('');
+      return false;
+    });
+    socket.on('chat message', function(msg){
+      if( msg.type == "text"){
+    //     console.log(msg);
+         $('#messages').append($('<li>').text(msg.value));
+      }
+      if( msg.type == "jpg"){
+         var h1 = document.createElement('img');
+         h1.src = msg.value;
+         $('#messages').append($('<li>').append("<img src='" + msg.value +"'/>"));
+      }
+      if( msg.type == "fund"){
+         var Tdata = dataCheck(msg.value);
+         var fm = {'161903':1271,'320007':10649,'519674':1126}
+         var Ytotal = 0;
+         var Ttotal = 0;
+         for(var i=0;i<Tdata.length;i++){
+             let dwjz = Tdata[i].dwjz;
+             let gsz = Tdata[i].gsz;
+             let Ymo = parseFloat(fm[Tdata[i].fundcode]) * parseFloat(dwjz);
+             let Tmo = parseFloat(fm[Tdata[i].fundcode]) * parseFloat(gsz);
+             Ytotal += Ymo;
+             Ttotal += Tmo;
+             
+         }
+         var Income = Ttotal - Ytotal;
+         $('#messages').append($('<li>').text("累计金额: "+Ttotal.toFixed(2)+"  今日收益："+Income.toFixed(2)));
+         
+      }
+      var len = $('#messages li').length;
+      if( len >=60 ){
+            $('#messages').html("");
+      }
+    });
+  });
+
+
+</script>
+<script type="text/javascript">
+function submits(){
+            
+            var form = new FormData(document.getElementById("tf"));
+            var name = document.getElementById("file").files[0].name;
+            document.getElementById('m').value=name;
+
+            console.log(hex_md5(name.split('.')[0]));
+            var timer = setInterval(function(){ myTimer() }, 1000);
+//             var req = new XMLHttpRequest();
+//             req.open("post", "${pageContext.request.contextPath}/public/testupload", false);
+//             req.send(form);
+            $.ajax({
+                url:"./chatImg",
+                type:"post",
+                data:form,
+                processData:false,
+                contentType:false,
+                xhr:jqureAjaxXhrOnProgress(function(e){
+                  console.log(e);
+                      if( e.total > 188){
+                  var percent=e.loaded / e.total;
+                  $('#uploadprogress').val(percent);                    
+                      }
+
+               // $('#uploadprogress').value(percent);
+            }),
+                success:function(data){
+                    window.clearInterval(timer);
+                    var socket = io();
+                    var iname = hex_md5(name.split('.')[0])+'.'+name.split('.')[1]
+                    socket.emit('chat message', {"type":"jpg","value":'./ChatImage/'+iname});
+                    console.log("over..");
+                },
+                error:function(e){
+                    alert("错误！！");
+                    window.clearInterval(timer);
+                }
+                
+            });   
+//             xhr.upload.onprogress = function (event) {
+// 　　if (event.lengthComputable) {
+//  　　　　var complete = (event.loaded / event.total * 100 | 0);
+//  　　　　var progress = document.getElementById('uploadprogress');
+//  　　　　progress.value = progress.innerHTML = complete;
+//  　　}
+//  }; 
+            document.getElementById('file').value = "";    
+            //get();//此处为上传文件的进度条
+        }
+function myTimer() {
+    var d = new Date();
+    var t = d.toLocaleTimeString();
+}
+function progressHandlingFunction(e) {
+    if (e.lengthComputable) {
+        //e.loaded 上传大小
+        //e.total 文件大小
+        console.log(e);
+        var percent = e.loaded/e.total;
+    }
+} 
+var jqureAjaxXhrOnProgress = function(fun) {
+    jqureAjaxXhrOnProgress.onprogress = fun; //绑定监听
+    //使用闭包实现监听绑
+    return function() {
+        //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+        var xhr = $.ajaxSettings.xhr();
+        //判断监听函数是否为函数
+        if (typeof jqureAjaxXhrOnProgress.onprogress !== 'function')
+            return xhr;
+        //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+        if (jqureAjaxXhrOnProgress.onprogress && xhr.upload) {
+            xhr.upload.onprogress = jqureAjaxXhrOnProgress.onprogress;
+        }
+        console.log(xhr);
+        return xhr;
+    }
+}
+</script>
+</html>

@@ -1,0 +1,1 @@
+supervisor --node_module node app.js

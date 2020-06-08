@@ -11,8 +11,11 @@ var fs = require('fs');
 var crypto = require('crypto');
 var tools = require('./model/tools');
 var websocket = require('./model/websocket');
-
-
+var psql = require('./model/psql');
+var pgsql = require('./model/pgsql');
+var httpserver = require('http').Server(app);
+var io = require('socket.io')(httpserver);
+var schedule = require('node-schedule');
 
 app.set('views',path.join(__dirname,"./"));
 app.engine('html',require('ejs').__express);
@@ -29,46 +32,30 @@ var storage = multer.diskStorage({
     cb(null, 'E:/UPdata')
   },
   filename: function (req, file, cb) {
-  	//console.log(file);
+  	
     cb(null, file.originalname)
   }
 })
+var chatst = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'E:/ChatImg')
+  },
+  filename: function (req, file, cb) {
+  	//console.log(file);
+  	var Iname = crypto.createHash('md5').update(file.originalname.split('.')[0]).digest("hex")+'.'+file.originalname.split('.')[1];
+    cb(null, Iname)
+  }
+})
 var upload = multer({ storage: storage });
+var chatImg = multer({ storage: chatst });
 //const upload = multer({ dest: 'C:/Users/Administrator/Desktop/image' })	
 
-app.get('/list', function (req, res, next) {
-	// superagent.get('http://m.iptv186.com/?act=play&token=68175c554cb942217f3dde06d69a3669&tid=ty&id=1')
- //    .set('User-Agent', 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1')
- //    .end(function (err, sres) {
- //      if (err) {
- //        return next(err);
- //      }
- //      var $ = cheerio.load(sres.text);
- //      var items = [];
- //      $('#playURL option').each(function (idx, element) {  
- //        var $element = $(element);
- //        items.push({
- //        	tvinfo:$element.attr('value'),
- //        	title:$element.text(),
- //        });
- //      });
- //      console.log(items);
- //      var header = "DAUMPLAYLIST\r\nplayname="+items[0].tvinfo+"\r\ntopindex=20\r\nsaveplaypos=0\r\n";
- //      var end = '';
- //      for (var i=0; i<items.length;i++) 
- //      {
- //      	 var file = i+'*file*'+items[i].tvinfo+"\r\n";
- //      	 var title = i+'*title*'+items[i].title+"\r\n";
- //      	 var play = i+'*played*0'+"\r\n";
- //      	 end += file+title+play;
- //      }
- //      var header = header + end;
- //      fs.writeFile('./message.dpl', header,function(err){
-	// 	    if(err) console.log('写文件操作失败');
-	// 	    else console.log('写文件操作成功');
-	// 	});
-    res.render('img');
-   // });
+app.get('/magnet', function (req, res, next) {
+    pgsql.NewData(function(da){
+         //   console.log(da)
+            res.render('magnet',{json:da});
+        });
+    
 });
 app.get('/yirenzhixia', function (req, res, next) {
   var items = [];
@@ -729,10 +716,203 @@ app.post('/upload', upload.single('logo'), function(req, res){//发送 json 数�
   console.dir(req.file);
   res.send('ok');
 });
+app.post('/chatImg', chatImg.single('logo'), function(req, res){//发送 json 数据到这个路由
+  //console.dir(req.file);
+  res.send('ok');
+});
+app.get('/chatImage/:name', function(req, res, next) {
+	//建议使用绝对路径查找图片
+	var title = req.params.name;
+    dataUrl = 'E:/ChatImg/'+title;
+    var isexist = fs.existsSync(dataUrl);
+    	if( isexist == true ){
+    		// title = title.replace('.png','')
+    		// let md5To = crypto.createHash('md5').update(title).digest("hex");
+    		// dataUrl = 'D:/Node/app/img/'+md5To+'png';
+    		var file = fs.createReadStream(dataUrl)
+    	}
+    	else{
+    		var notExist = 'E:/img/1.png';
+    		title = title.replace('.png','')
+    		let md5To = crypto.createHash('md5').update(title).digest("hex");
+    		dataUrl = 'E:/img/'+md5To+'.png';
+    		var Pngexist = fs.existsSync(dataUrl);
+    //		console.log(md5To,Pngexist);
+    		if(Pngexist == true){
+                var file = fs.createReadStream(dataUrl);
+    		}
+    		else{
+    			var enbase64 = Buffer(title,'base64').toString()
+    //			console.log(title);
+	    		var fileexist = fs.existsSync('E:/Movies/'+enbase64);
+	    		tools.captureImg(title);
+	    		// if(fileexist == true){
+	    		// 	CaptureImg(enbase64);
+	    		// }
+	    		var file = fs.createReadStream(notExist)
+    		}
+    		
+    	}
+    
+ //   const rs = fs.createReadStream(dataUrl)
+//	rs.pipe(res);
+//	var s = b.toString();
+	   //  console.log(s);
+    // console.log(s);
+   // var path = b.toString();
+    
+    file.pipe(res);
+});
 app.get('/form',function(req, res){
   var form = fs.readFileSync('./form.html',{ encoding : "utf8"});
   res.send(form);
 });
-app.listen(3000, function () {
-  console.log('app is listening at port 3000');
+
+
+app.get('/socket',function(req,res,next){
+	res.sendfile(__dirname + '/socket.html');
 });
+app.get('/fund',function(req,res,next){
+	res.sendfile(__dirname + '/html/fundShow.html');
+});
+
+io.on('connection', function (socket) {
+  const SCs = ()=>{
+	schedule.scheduleJob('1 0-59 9-15 * * 1-5',()=>{
+		psql.Fsearch(function(da){
+			socket.emit('chat message',{'type':'fund','value':da});
+
+           // console.log(da)
+        });
+		
+		console.log('scheduleCronStyle:'+ typeof(new Date()));
+	});
+}
+
+const mget = ()=>{
+	schedule.scheduleJob('1 0-59 * * * *',()=>{
+		
+        pgsql.Fsearch(function(da){
+			socket.emit('magnet',{'type':'magnet','value':da}); 
+            //console.log(da)
+        });
+		
+		console.log('scheduleCronStyle:'+ typeof(new Date()));
+	});
+}
+mget();
+SCs();
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+  socket.on('chat message', function(msg){
+  	io.emit('chat message', msg);
+
+    psql.Fsearch(function(da){
+			socket.emit('chat message',{'type':'fund','value':da}); 
+           // console.log(da)
+        });
+  	//socket.broadcast.emit('broadcast', msg);
+
+  	var total = 0; 
+	var last = 0 
+	var toMy = 0 
+	var li = []
+  	// for(var i=0;i<li.length;i++){ 
+	// show(li,function(obj){
+
+	// 	let gsz = obj.gsz; let dwjz = obj.dwjz; 
+	// 	let name = obj.name; let gszzl = obj.gszzl 
+	// 	let yes = (obj.money * parseFloat(dwjz)).toFixed(2) 
+	// 	let today = (obj.money * parseFloat(gsz)).toFixed(2) 
+	// 	let my = (today - yes).toFixed(2) 
+	// 	total += parseInt(today) 
+	// 	last += parseInt(yes) 
+	// 	toMy += parseInt(my) 
+	// 	io.emit('chat message',{'type':'text','value':total}); 
+	//  }); 
+// }
+    // console.log('message: ' + msg);
+    // var list = []
+    // Fdata(list,function(mon){
+    // 	console.log(mon,mon.length);
+    // });
+  });
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+// app.listen(3000, function () {
+//   console.log('app is listening at port 3000');
+// });
+var superagent = require('superagent') 
+var cheerio = require('cheerio') 
+var fs = require('fs'); 
+let money = 0; 
+
+function show(dict,callback){ 
+// 用 superagent 去抓取 https:
+// //cnodejs.org/ 的内容 
+  	var li = [{'num':10333,'url':'http://fundgz.1234567.com.cn/js/320007.js'}, 
+          {'num':1126,'url':'http://fundgz.1234567.com.cn/js/519674.js'}, 
+          {'num':1271,'url':'http://fundgz.1234567.com.cn/js/161903.js'}]
+    dict = li;
+    for(var i=0;i<li.length;i++){  
+		superagent.get(dict[i].url) 
+		.end(function (err, sres) 
+		{ 
+		if(err){ 
+		console.log(err); 
+		} 
+		 var buffer = new Buffer.from(sres.body) 
+		var str = buffer.toString(); 
+		var parseStr = /\{(.+)\}/g 
+		var data = JSON.parse(str.match(parseStr)) 
+		psql.Fdata(data); 
+		//data['money'] = li[i].num 
+		return callback(data); }
+		); 
+	}
+} 
+
+function Fdata(data,callback){
+    var li = [{'num':10333,'url':'http://fundgz.1234567.com.cn/js/320007.js'}, 
+	{'num':1126,'url':'http://fundgz.1234567.com.cn/js/519674.js'}, 
+	{'num':1271,'url':'http://fundgz.1234567.com.cn/js/161903.js'}]
+	var total = 0; 
+	var last = 0 
+	var toMy = 0 
+	let gsz;
+	let dwjz;
+	let gszz;
+	let name;
+	let yes;
+	let today;
+	let my; 
+	for(var i=0;i<li.length;i++){ 
+		show(li[i],function(obj){ 
+			gsz = obj.gsz; 
+			dwjz = obj.dwjz; 
+			name = obj.name; 
+			gszzl = obj.gszzl 
+			yes = (obj.money * parseFloat(dwjz)).toFixed(2) 
+			today = (obj.money * parseFloat(gsz)).toFixed(2) 
+			my = (today - yes).toFixed(2) 
+			total += parseInt(today) 
+			last += parseInt(yes) 
+			toMy += parseInt(my)
+			data.push({
+				'total':total,
+				'last':last,
+				'toMy':toMy
+			});
+			
+
+			console.log(yes,today,my,total,last,toMy); }); 
+	}
+	
+
+}
+
+httpserver.listen(3000);
