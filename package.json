@@ -15,7 +15,7 @@
     "pg": "^8.2.1",
     "socket.io": "^2.3.0",
     "superagent": "^4.1.0",
-    "superagent-proxy": "^2.0.0",
+    "superagent-proxy": "^3.0.0",
     "websocket": "^1.0.31"
   },
   "devDependencies": {},
